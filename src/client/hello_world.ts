@@ -10,6 +10,7 @@ import {
   TransactionInstruction,
   Transaction,
   sendAndConfirmTransaction,
+  clusterApiUrl,
 } from '@solana/web3.js';
 import fs from 'mz/fs';
 import path from 'path';
@@ -88,9 +89,13 @@ const GREETING_SIZE = borsh.serialize(
  */
 export async function establishConnection(): Promise<void> {
   const rpcUrl = await getRpcUrl();
-  connection = new Connection(rpcUrl, 'confirmed');
+  connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
   const version = await connection.getVersion();
-  console.log('Connection to cluster established:', rpcUrl, version);
+  console.log(
+    'Connection to cluster established:',
+    clusterApiUrl('devnet'),
+    version,
+  );
 }
 
 /**
@@ -137,7 +142,8 @@ export async function checkProgram(): Promise<void> {
   // Read program id from keypair file
   try {
     const programKeypair = await createKeypairFromFile(PROGRAM_KEYPAIR_PATH);
-    programId = programKeypair.publicKey;
+    // programId = programKeypair.publicKey;
+    programId = new PublicKey("6SBcW2cS77zhqV2thEcndvYp8s45FW5k1GYSQ2m5Gqf1");
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
